@@ -13,7 +13,6 @@ const Countdown = () => {
   const workingIntervalDuration = 25 * 60 * 1000;
   const restIntervalDuration = 5 * 60 * 1000;
 
-  //const [ ms, setMs ] = React.useState(25*60*1000);
   const [ms, setMs] = React.useState(workingIntervalDuration);
 
   // flag para saber se já está rodando o timer
@@ -23,7 +22,14 @@ const Countdown = () => {
   const [workingTime, setWorkingTime] = React.useState(true);
 
   function msToMinutesAndSeconds(ms) {
-    return new Date(ms).toISOString().slice(14, -5);
+    const minutes = Math.floor(ms/60000);
+    const seconds = ( (ms % 60000) / 1000 ).toFixed(0);
+    // to avoid bugs
+    if(seconds === 60) {
+      minutes = minutes - 1;
+      seconds = 0;
+    }
+    return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
   }
 
   React.useEffect(() => {
@@ -32,6 +38,8 @@ const Countdown = () => {
       const intervalFnc = setInterval(() => {
         const currentTime = Date.now();
         const accurateDelay = currentTime - initialTime;
+
+        console.log(accurateDelay);
 
         setMs((ms) => ms - accurateDelay);
 
