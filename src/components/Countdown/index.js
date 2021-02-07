@@ -53,8 +53,9 @@ const Countdown = () => {
       return () => {
         clearInterval(intervalRef.current);
       }
+    } else {
+      updateTimer(ms);
     }
-
   }, [timerActive, ms])
 
   
