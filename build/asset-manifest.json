@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/static/js/main.c575d8c1.chunk.js",
-    "main.js.map": "/static/js/main.c575d8c1.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.40864978.js",
-    "runtime-main.js.map": "/static/js/runtime-main.40864978.js.map",
-    "static/js/2.d0bc0d5e.chunk.js": "/static/js/2.d0bc0d5e.chunk.js",
-    "static/js/2.d0bc0d5e.chunk.js.map": "/static/js/2.d0bc0d5e.chunk.js.map",
-    "static/js/3.dfc5fc8e.chunk.js": "/static/js/3.dfc5fc8e.chunk.js",
-    "static/js/3.dfc5fc8e.chunk.js.map": "/static/js/3.dfc5fc8e.chunk.js.map",
-    "index.html": "/index.html",
-    "static/js/2.d0bc0d5e.chunk.js.LICENSE.txt": "/static/js/2.d0bc0d5e.chunk.js.LICENSE.txt"
+    "main.js": "/pomodoro-timer/static/js/main.4e331e86.chunk.js",
+    "main.js.map": "/pomodoro-timer/static/js/main.4e331e86.chunk.js.map",
+    "runtime-main.js": "/pomodoro-timer/static/js/runtime-main.45037dc5.js",
+    "runtime-main.js.map": "/pomodoro-timer/static/js/runtime-main.45037dc5.js.map",
+    "static/js/2.91d9fe4b.chunk.js": "/pomodoro-timer/static/js/2.91d9fe4b.chunk.js",
+    "static/js/2.91d9fe4b.chunk.js.map": "/pomodoro-timer/static/js/2.91d9fe4b.chunk.js.map",
+    "static/js/3.dfc5fc8e.chunk.js": "/pomodoro-timer/static/js/3.dfc5fc8e.chunk.js",
+    "static/js/3.dfc5fc8e.chunk.js.map": "/pomodoro-timer/static/js/3.dfc5fc8e.chunk.js.map",
+    "index.html": "/pomodoro-timer/index.html",
+    "static/js/2.91d9fe4b.chunk.js.LICENSE.txt": "/pomodoro-timer/static/js/2.91d9fe4b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.40864978.js",
-    "static/js/2.d0bc0d5e.chunk.js",
-    "static/js/main.c575d8c1.chunk.js"
+    "static/js/runtime-main.45037dc5.js",
+    "static/js/2.91d9fe4b.chunk.js",
+    "static/js/main.4e331e86.chunk.js"
   ]
 }

@@ -3,6 +3,8 @@ import Countdown from './components/Countdown';
 
 function App() {
 
+  console.log('teste');
+  
   return (
     <div className="App">
 

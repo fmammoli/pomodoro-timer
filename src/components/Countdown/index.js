@@ -9,32 +9,61 @@ const Countdown = () => {
   
   const [ ms, setMs ] = React.useState(25*60*1000);
   const [ timer, setTimer ] = React.useState(null);
+
+  // flag para saber se já está rodando o timer
+  const [ timerActive, setTimerActive ] = React.useState(false);
+
+  // referência para calcular delay
+  const initialTime = React.useRef();
+
+  // referencia setTinverval
   const intervalRef = React.useRef();
   
+
   function msToMinutesAndSeconds(ms) {
     var minutes = Math.floor(ms / 60000);
     var seconds = ((ms % 60000) / 1000).toFixed(0);
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
   }
-  
-  React.useEffect( () => {
-    //formata em mm:ss
+
+  function updateTimer(ms) {
     const formattedTime = msToMinutesAndSeconds(ms);
     setTimer(formattedTime);
-  
-  }, [ms])
+  }
+
+
+  React.useEffect( () => {
+    updateTimer(ms);
+  }, []);
+ 
+
+  React.useEffect( () => {
+
+    if(timerActive) {
+      initialTime.current = Date.now();
+      intervalRef.current = setInterval ( ()=>{
+        const currentTime = Date.now();        
+        const accurateDelay = currentTime - initialTime.current;
+       
+        setMs( ms => ms - accurateDelay);
+        updateTimer(ms);
+
+      }, 1000);
+
+      return () => {
+        clearInterval(intervalRef.current);
+      }
+    }
+
+  }, [timerActive, ms])
+
   
   function startTimer() {
-    if (!intervalRef.current) {
-      intervalRef.current = setInterval( () => {
-        setMs((ms) => ms-1000)
-      }, 1 * 1000)
-    }
+    setTimerActive(true);
   }
    
   function pauseTimer() {
-    clearInterval(intervalRef.current);
-    intervalRef.current = undefined;
+    setTimerActive(false);
   }
 
   function addOneMin() {
@@ -42,12 +71,14 @@ const Countdown = () => {
   }
   
   function stopTimer() {
-    pauseTimer();
+    setTimerActive(false);
     setMs(25*60*1000);
+    updateTimer(ms);
   }
 
   return (
     <> 
+      <h3>{ms}</h3>
 
       <h1 style={{ fontSize: '6em', textAlign: 'center'}}>{timer}</h1>
 
