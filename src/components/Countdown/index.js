@@ -26,7 +26,7 @@ const Countdown = () => {
     const seconds = ( (ms % 60000) / 1000 ).toFixed(0);
     // to avoid bugs
     if(seconds === 60) {
-      minutes = minutes - 1;
+      minutes = minutes + 1;
       seconds = 0;
     }
     return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
