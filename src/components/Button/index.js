@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 const Button = styled.button`
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background-color: tomato;
   border-color: tomato;
   color: #fff;
@@ -10,7 +10,7 @@ const Button = styled.button`
   text-align: center;
   line-height: 30px;
   margin: 5px;
-  border-radius: 50%;
+  //border-radius: 50%;
   &:focus {
     outline: 0;
   }

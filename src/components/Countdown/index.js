@@ -73,14 +73,14 @@ const Countdown = () => {
   function stopTimer() {
     setTimerActive(false);
     setMs(25*60*1000);
-    updateTimer(ms);
+    updateTimer(25*60*1000);
   }
 
   return (
     <> 
-      <h3>{ms}</h3>
+      <p>{ms}</p>
 
-      <h1 style={{ fontSize: '6em', textAlign: 'center'}}>{timer}</h1>
+      <p style={{ fontSize: '5em', textAlign: 'center' }}>{timer}</p>
 
       <div style={{ display: 'flex', justifyContent: 'center'}}>
         <Button onClick={startTimer} >

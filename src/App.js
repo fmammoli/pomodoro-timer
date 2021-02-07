@@ -1,5 +1,7 @@
 import React from 'react';
 import Countdown from './components/Countdown';
+import TimerWrapper from './components/TimerWrapper';
+import GlobalStyle from './globalStyle';
 
 function App() {
 
@@ -7,8 +9,10 @@ function App() {
   
   return (
     <div className="App">
-
-      <Countdown/>
+      <GlobalStyle />
+      <TimerWrapper>
+        <Countdown/>
+      </TimerWrapper>
 
     </div>
   );
