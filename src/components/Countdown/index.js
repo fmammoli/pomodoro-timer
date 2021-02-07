@@ -6,24 +6,24 @@ import { faPause, faPlay, faPlus, faStop } from "@fortawesome/free-solid-svg-ico
 
 
 const Countdown = () => {
+
+  const workingIntervalDuration = 25*60*1000;
+  const restIntervalDuration = 5*60*1000; 
   
-  const [ ms, setMs ] = React.useState(25*60*1000);
+  //const [ ms, setMs ] = React.useState(25*60*1000);
+  const [ ms, setMs ] = React.useState(workingIntervalDuration);
   const [ timer, setTimer ] = React.useState(null);
 
   // flag para saber se já está rodando o timer
-  const [ timerActive, setTimerActive ] = React.useState(false);
+  const [ timerActive, setTimerActive ] = React.useState(false); 
 
-  // referência para calcular delay
-  const initialTime = React.useRef();
-
-  // referencia setTinverval
-  const intervalRef = React.useRef();
-  
+  // status: work or rest
+  const [ workingTime, setWorkingTime ] = React.useState(true);
 
   function msToMinutesAndSeconds(ms) {
     var minutes = Math.floor(ms / 60000);
     var seconds = ((ms % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    return (minutes < 10 ? '0' : '' ) + minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
   }
 
   function updateTimer(ms) {
@@ -40,18 +40,32 @@ const Countdown = () => {
   React.useEffect( () => {
 
     if(timerActive) {
-      initialTime.current = Date.now();
-      intervalRef.current = setInterval ( ()=>{
+      const initialTime = Date.now();
+      const intervalFnc = setInterval ( ()=>{
         const currentTime = Date.now();        
-        const accurateDelay = currentTime - initialTime.current;
+        const accurateDelay = currentTime - initialTime;
        
         setMs( ms => ms - accurateDelay);
+
+        if( ms <= 0) {
+          updateTimer(0);
+          if( workingTime ) { 
+            setMs(restIntervalDuration);
+          } else {
+            setMs(workingIntervalDuration);
+          }
+          setTimeout( () => {
+            setWorkingTime(!workingTime)
+          }, 1000);
+          return;
+        }
         updateTimer(ms);
+        
 
       }, 1000);
 
       return () => {
-        clearInterval(intervalRef.current);
+        clearInterval(intervalFnc);
       }
     } else {
       updateTimer(ms);
@@ -60,6 +74,10 @@ const Countdown = () => {
 
   
   function startTimer() {
+    if(!timerActive) {
+      setMs( ms => ms - 1000 );
+      updateTimer(ms);
+    }
     setTimerActive(true);
   }
    
@@ -73,17 +91,23 @@ const Countdown = () => {
   
   function stopTimer() {
     setTimerActive(false);
-    setMs(25*60*1000);
-    updateTimer(25*60*1000);
+    setMs(workingIntervalDuration);
+    updateTimer(workingIntervalDuration);
+    setWorkingTime(true);
   }
 
   return (
     <> 
-      <p>{ms}</p>
 
-      <p style={{ fontSize: '5em', textAlign: 'center' }}>{timer}</p>
+      <p style={{ margin: '0' ,color: 'tomato', textAlign: 'center'}}>
+        {workingTime ? 'work' : 'rest'}
+      </p>
 
-      <div style={{ display: 'flex', justifyContent: 'center'}}>
+      <p style={{ margin: '70px 0', fontSize: '5em', textAlign: 'center' }}>
+        {timer}
+      </p>
+
+      <div style={{ margin: '20px 0', display: 'flex', justifyContent: 'center'}}>
         <Button onClick={startTimer} >
           <FontAwesomeIcon icon={faPlay} />
         </Button>
@@ -99,6 +123,7 @@ const Countdown = () => {
         <Button onClick={stopTimer} >
           <FontAwesomeIcon icon={faStop} />
         </Button>
+
       </div>
       
     </>
