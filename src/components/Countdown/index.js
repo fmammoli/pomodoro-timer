@@ -12,7 +12,7 @@ import useAnimationFrame from "../../Hooks/UseAnimationFrame";
 import useCount from "../../Hooks/UseCount";
 
 const Countdown = () => {
-  const workingIntervalDuration = 25 * 60 * 1000;
+  const workingIntervalDuration = 0.5 * 60 * 1000;
   const restIntervalDuration = 5 * 60 * 1000;
 
   const [transientDuration, setTransientDuration] = useState(
@@ -29,8 +29,11 @@ const Countdown = () => {
     setCountDuration,
   ] = useCount(workingIntervalDuration);
 
+  useEffect(() => {
+    console.log("Done!!!: " + done);
+  }, [done]);
+
   function msToMinutesAndSeconds(elapsedTime) {
-    console.log(transientDuration);
     const ms = transientDuration - elapsedTime;
     const minutes = Math.floor(ms / 60000);
     const seconds = ((ms % 60000) / 1000).toFixed(0);

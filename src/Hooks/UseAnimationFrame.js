@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
+// Eternal ticking....
 function animationInterval(ms, signal, callback) {
   const start = document.timeline.currentTime;
 
@@ -22,6 +23,10 @@ function animationInterval(ms, signal, callback) {
   scheduleFrame(start);
 }
 
+// Um hook para usar aquela função.
+// Seria legal colocar aquela função dentro do react,
+// mas não entendi como fazer isso.
+// Talvez seja melhor fora, sei la.
 const useAnimationFrame = (ms, callback) => {
   const callbackRef = useRef(callback);
 
