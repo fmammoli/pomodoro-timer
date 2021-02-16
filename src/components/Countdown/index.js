@@ -15,12 +15,23 @@ const Countdown = () => {
   const workingIntervalDuration = 25 * 60 * 1000;
   const restIntervalDuration = 5 * 60 * 1000;
 
-  const [currentTime, isActive, done, start, pause, stop] = useCount(
+  const [transientDuration, setTransientDuration] = useState(
     workingIntervalDuration
   );
 
+  const [
+    currentTime,
+    isActive,
+    done,
+    start,
+    pause,
+    stop,
+    setCountDuration,
+  ] = useCount(workingIntervalDuration);
+
   function msToMinutesAndSeconds(elapsedTime) {
-    const ms = workingIntervalDuration - elapsedTime;
+    console.log(transientDuration);
+    const ms = transientDuration - elapsedTime;
     const minutes = Math.floor(ms / 60000);
     const seconds = ((ms % 60000) / 1000).toFixed(0);
     // to avoid bugs
@@ -46,11 +57,20 @@ const Countdown = () => {
   }
 
   function addOneMin() {
-    // setMs((ms) => ms + 60000);
+    // Isso tá meio feio
+    // TODO
+    console.log("add");
+    setCountDuration((prevDuration) => {
+      const newDuration = prevDuration + 60 * 1000;
+      console.log(newDuration);
+      setTransientDuration(newDuration);
+      return newDuration;
+    });
   }
 
   function stopTimer() {
-    stop();
+    stop(workingIntervalDuration);
+    setTransientDuration(workingIntervalDuration);
   }
 
   return (

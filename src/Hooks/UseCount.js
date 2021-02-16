@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import useAnimationFrame from "./UseAnimationFrame";
 
+// A hook for counting
+// Usage:
+//      import useCount from ""
+//      const [currentTime, isActive, done, start, pause, stop] = useCount(60 * 1000);
+
 function useCount(duration) {
   const [countDuration, setCountDuration] = useState(duration);
   // const [time, setTime] = useState(0);
@@ -27,9 +32,9 @@ function useCount(duration) {
   useAnimationFrame(interval, getTimeData);
 
   useEffect(() => {
-    console.log("Time: " + roundElapsedTime);
-    console.log("Cronometro comecou em: " + startTime);
-    console.log("Cronometro Time atual: " + currentTime);
+    // console.log("Time: " + roundElapsedTime);
+    // console.log("Cronometro comecou em: " + startTime);
+    // console.log("Cronometro Time atual: " + currentTime);
 
     if (!isActive) {
       setStartTime(roundElapsedTime);
@@ -65,10 +70,11 @@ function useCount(duration) {
       setActive(false);
     }
   }
-  function stop() {
+  function stop(newDuration) {
     //setStartTime(roundElapsedTime);
     setPausedTime(0);
     setCurrentTime(0);
+    setCountDuration(newDuration);
     setActive(false);
   }
   return [currentTime, isActive, done, start, pause, stop, setCountDuration];
