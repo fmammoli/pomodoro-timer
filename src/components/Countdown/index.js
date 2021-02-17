@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Button from "../Button";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPause,
@@ -9,88 +8,82 @@ import {
   faStop,
 } from "@fortawesome/free-solid-svg-icons";
 
+import useAnimationFrame from "../../hooks/useCount/useAnimationFrame";
+import useCount from "../../hooks/useCount";
+
 const Countdown = () => {
-  const workingIntervalDuration = 25 * 60 * 1000;
+  const workingIntervalDuration = 0.5 * 60 * 1000;
   const restIntervalDuration = 5 * 60 * 1000;
 
-  const [ms, setMs] = React.useState(workingIntervalDuration);
+  const [transientDuration, setTransientDuration] = useState(
+    workingIntervalDuration
+  );
 
-  // flag para saber se já está rodando o timer
-  const [timerActive, setTimerActive] = React.useState(false);
+  const [
+    currentTime,
+    isActive,
+    done,
+    start,
+    pause,
+    addOne,
+    stop,
+    setCountDuration,
+  ] = useCount(workingIntervalDuration);
 
-  // status: work or rest
-  const [workingTime, setWorkingTime] = React.useState(true);
+  useEffect(() => {
+    console.log("Done!!!: " + done);
+  }, [done]);
 
-  function msToMinutesAndSeconds(ms) {
-    const minutes = Math.floor(ms/60000);
-    const seconds = ( (ms % 60000) / 1000 ).toFixed(0);
+  function msToMinutesAndSeconds(elapsedTime) {
+    const ms = transientDuration - elapsedTime;
+    const minutes = Math.floor(ms / 60000);
+    const seconds = ((ms % 60000) / 1000).toFixed(0);
     // to avoid bugs
-    if(seconds === 60) {
+    if (seconds === 60) {
       minutes = minutes + 1;
       seconds = 0;
     }
-    return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    return (
+      (minutes < 10 ? "0" : "") +
+      minutes +
+      ":" +
+      (seconds < 10 ? "0" : "") +
+      seconds
+    );
   }
 
-  React.useEffect(() => {
-    if (timerActive) {
-      const initialTime = Date.now();
-      const intervalFnc = setInterval(() => {
-        const currentTime = Date.now();
-        const accurateDelay = currentTime - initialTime;
-
-        console.log(accurateDelay);
-
-        setMs((ms) => ms - accurateDelay);
-
-        if (ms <= 0) {
-          if (workingTime) {
-            setMs(restIntervalDuration);
-          } else {
-            setMs(workingIntervalDuration);
-          }
-          setTimeout(() => {
-            setWorkingTime(!workingTime);
-          }, 1000);
-          return;
-        }
-      }, 1000);
-
-      return () => {
-        clearInterval(intervalFnc);
-      };
-    }
-  }, [timerActive, ms]);
-
   function startTimer() {
-    if (!timerActive) {
-      setMs((ms) => ms - 1000);
-    }
-    setTimerActive(true);
+    start();
   }
 
   function pauseTimer() {
-    setTimerActive(false);
+    pause();
   }
 
   function addOneMin() {
-    setMs((ms) => ms + 60000);
+    // setCountDuration((prevDuration) => {
+    //   const newDuration = prevDuration + 60 * 1000;
+    //   console.log(newDuration);
+    //   setTransientDuration(newDuration);
+    //   return newDuration;
+    // });
+
+    addOne();
   }
 
   function stopTimer() {
-    setTimerActive(false);
-    setMs(workingIntervalDuration);
-    setWorkingTime(true);
+    stop(workingIntervalDuration);
+    setTransientDuration(workingIntervalDuration);
   }
 
   return (
     <>
       <p style={{ margin: "0", color: "tomato", textAlign: "center" }}>
-        {workingTime ? "work" : "rest"}
+        {/* {workingTime ? "work" : "rest"} */}
       </p>
 
       <p style={{ margin: "70px 0", fontSize: "5em", textAlign: "center" }}>
-        {msToMinutesAndSeconds(ms)}
+        {msToMinutesAndSeconds(currentTime)}
       </p>
 
       <div
