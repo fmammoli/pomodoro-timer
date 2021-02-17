@@ -8,8 +8,8 @@ import {
   faStop,
 } from "@fortawesome/free-solid-svg-icons";
 
-import useAnimationFrame from "../../Hooks/UseAnimationFrame";
-import useCount from "../../Hooks/UseCount";
+import useAnimationFrame from "../../hooks/useCount/useAnimationFrame";
+import useCount from "../../hooks/useCount";
 
 const Countdown = () => {
   const workingIntervalDuration = 0.5 * 60 * 1000;
@@ -25,6 +25,7 @@ const Countdown = () => {
     done,
     start,
     pause,
+    addOne,
     stop,
     setCountDuration,
   ] = useCount(workingIntervalDuration);
@@ -60,15 +61,14 @@ const Countdown = () => {
   }
 
   function addOneMin() {
-    // Isso tá meio feio
-    // TODO
-    console.log("add");
-    setCountDuration((prevDuration) => {
-      const newDuration = prevDuration + 60 * 1000;
-      console.log(newDuration);
-      setTransientDuration(newDuration);
-      return newDuration;
-    });
+    // setCountDuration((prevDuration) => {
+    //   const newDuration = prevDuration + 60 * 1000;
+    //   console.log(newDuration);
+    //   setTransientDuration(newDuration);
+    //   return newDuration;
+    // });
+
+    addOne();
   }
 
   function stopTimer() {

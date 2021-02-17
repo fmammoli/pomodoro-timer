@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import useAnimationFrame from "./UseAnimationFrame";
+import useAnimationFrame from "./useAnimationFrame";
 
 // A hook for counting
 // Usage:
@@ -15,6 +15,7 @@ function useCount(duration) {
   const [startTime, setStartTime] = useState(0);
   const [pausedTime, setPausedTime] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [additionalMinutes, setAdditionalMinutes] = useState(0);
 
   const [isActive, setActive] = useState(false);
 
@@ -50,6 +51,7 @@ function useCount(duration) {
   useEffect(() => {
     if (isActive) {
       if (currentTime >= countDuration) {
+        setAdditionalMinutes(0);
         setDone(true);
         setActive(false);
       }
@@ -58,9 +60,11 @@ function useCount(duration) {
 
   function start() {
     if (!isActive) {
-      setStartTime(roundElapsedTime);
+      const additionalMinutesToMilliseconds = additionalMinutes * 60 * 1000;
+      setStartTime(roundElapsedTime + additionalMinutesToMilliseconds);
       setActive(true);
     }
+    console.log(currentTime);
   }
 
   function pause() {
@@ -70,13 +74,33 @@ function useCount(duration) {
       setActive(false);
     }
   }
+
+  function addOne() {
+    if (isActive) {
+      setStartTime(roundElapsedTime - currentTime + 60 * 1000);
+    } else {
+      setCurrentTime(currentTime - 60 * 1000);
+      setAdditionalMinutes(additionalMinutes + 1);
+    }
+  }
+
   function stop(newDuration) {
     //setStartTime(roundElapsedTime);
     setPausedTime(0);
     setCurrentTime(0);
+    setAdditionalMinutes(0);
     setCountDuration(newDuration);
     setActive(false);
   }
-  return [currentTime, isActive, done, start, pause, stop, setCountDuration];
+  return [
+    currentTime,
+    isActive,
+    done,
+    start,
+    pause,
+    addOne,
+    stop,
+    setCountDuration,
+  ];
 }
 export default useCount;

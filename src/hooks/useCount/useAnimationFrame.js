@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 // Eternal ticking....
 function animationInterval(ms, signal, callback) {
