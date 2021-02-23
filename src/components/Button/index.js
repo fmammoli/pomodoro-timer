@@ -1,15 +1,15 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Button = styled.button`
-  width: 40px;
-  height: 40px;
+  width: 3rem;
+  height: 3rem;
   background-color: tomato;
   border-color: tomato;
   color: #fff;
-  font-size: 12px;
+  font-size: 1rem;
   text-align: center;
-  line-height: 30px;
-  margin: 1px;
+  line-height: 1.5rem;
+  cursor: pointer;
   //border-radius: 50%;
   &:focus {
     outline: 0;

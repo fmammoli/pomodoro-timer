@@ -7,9 +7,8 @@ import {
   faPlus,
   faStop,
 } from "@fortawesome/free-solid-svg-icons";
-
-import useAnimationFrame from "../../hooks/useCount/useAnimationFrame";
 import useCount from "../../hooks/useCount";
+import { Clock } from "../Clock";
 
 const Countdown = () => {
   const workingIntervalDuration = 0.5 * 60 * 1000;
@@ -43,13 +42,8 @@ const Countdown = () => {
       minutes = minutes + 1;
       seconds = 0;
     }
-    return (
-      (minutes < 10 ? "0" : "") +
-      minutes +
-      ":" +
-      (seconds < 10 ? "0" : "") +
-      seconds
-    );
+
+    return [minutes, seconds];
   }
 
   function startTimer() {
@@ -82,12 +76,15 @@ const Countdown = () => {
         {/* {workingTime ? "work" : "rest"} */}
       </p>
 
-      <p style={{ margin: "70px 0", fontSize: "5em", textAlign: "center" }}>
-        {msToMinutesAndSeconds(currentTime)}
-      </p>
+      <Clock time={msToMinutesAndSeconds(currentTime)} />
 
       <div
-        style={{ margin: "20px 0", display: "flex", justifyContent: "center" }}
+        style={{
+          width: "100%",
+          margin: "20px 0",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
       >
         <Button onClick={startTimer}>
           <FontAwesomeIcon icon={faPlay} />
