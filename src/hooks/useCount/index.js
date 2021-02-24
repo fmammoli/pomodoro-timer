@@ -91,16 +91,17 @@ function useCount(duration) {
     setAdditionalMinutes(0);
     setCountDuration(newDuration);
     setActive(false);
+    setDone(false);
   }
-  return [
-    currentTime,
-    isActive,
-    done,
-    start,
-    pause,
-    addOne,
-    stop,
-    setCountDuration,
-  ];
+  return {
+    currentTime: currentTime,
+    isActive: isActive,
+    done: done,
+    start: start,
+    pause: pause,
+    addOne: addOne,
+    stop: stop,
+    setCountDuration: setCountDuration,
+  };
 }
 export default useCount;

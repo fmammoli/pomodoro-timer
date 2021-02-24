@@ -11,27 +11,37 @@ import useCount from "../../hooks/useCount";
 import { Clock } from "../Clock";
 
 const Countdown = () => {
-  const workingIntervalDuration = 0.5 * 60 * 1000;
-  const restIntervalDuration = 5 * 60 * 1000;
+  const workingIntervalDuration = 3 * 1000;
+  const restIntervalDuration = 5 * 1000;
+
+  const [workingTime, setWorkingTime] = useState(true);
 
   const [transientDuration, setTransientDuration] = useState(
     workingIntervalDuration
   );
 
-  const [
-    currentTime,
-    isActive,
-    done,
-    start,
-    pause,
-    addOne,
-    stop,
-    setCountDuration,
-  ] = useCount(workingIntervalDuration);
+  const workingTimer = useCount(workingIntervalDuration);
+  const restTimer = useCount(restIntervalDuration);
 
   useEffect(() => {
-    console.log("Done!!!: " + done);
-  }, [done]);
+    if (workingTimer.done) {
+      setTimeout(() => {
+        setWorkingTime(false);
+        setTransientDuration(restIntervalDuration);
+        workingTimer.stop(workingIntervalDuration);
+        restTimer.start();
+      }, 1000);
+    }
+
+    if (restTimer.done) {
+      setTimeout(() => {
+        setWorkingTime(true);
+        setTransientDuration(workingIntervalDuration);
+        restTimer.stop(restIntervalDuration);
+        workingTimer.start();
+      }, 1000);
+    }
+  }, [workingTimer.done, restTimer.done]);
 
   function msToMinutesAndSeconds(elapsedTime) {
     const ms = transientDuration - elapsedTime;
@@ -47,26 +57,36 @@ const Countdown = () => {
   }
 
   function startTimer() {
-    start();
+    if (workingTime) {
+      workingTimer.start();
+    } else {
+      restTimer.start();
+    }
   }
 
   function pauseTimer() {
-    pause();
+    if (workingTime) {
+      workingTimer.pause();
+    } else {
+      restTimer.pause();
+    }
   }
 
   function addOneMin() {
-    // setCountDuration((prevDuration) => {
-    //   const newDuration = prevDuration + 60 * 1000;
-    //   console.log(newDuration);
-    //   setTransientDuration(newDuration);
-    //   return newDuration;
-    // });
-
-    addOne();
+    if (workingTime) {
+      workingTimer.addOne();
+    } else {
+      restTimer.addOne();
+    }
   }
 
   function stopTimer() {
-    stop(workingIntervalDuration);
+    if (workingTime) {
+      workingTimer.stop(workingIntervalDuration);
+    } else {
+      restTimer.stop(restIntervalDuration);
+    }
+    setWorkingTime(true);
     setTransientDuration(workingIntervalDuration);
   }
 
@@ -76,7 +96,11 @@ const Countdown = () => {
         {/* {workingTime ? "work" : "rest"} */}
       </p>
 
-      <Clock time={msToMinutesAndSeconds(currentTime)} />
+      <Clock
+        time={msToMinutesAndSeconds(
+          workingTime ? workingTimer.currentTime : restTimer.currentTime
+        )}
+      />
 
       <div
         style={{
