@@ -1,14 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
-import Button from "../Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPause,
-  faPlay,
-  faPlus,
-  faStop,
-} from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect, useState } from "react";
 import useCount from "../../hooks/useCount";
 import { Clock } from "../Clock";
+import TimerControlButtons from "../TimerControlButtons";
 
 const Countdown = () => {
   const workingIntervalDuration = 3 * 1000;
@@ -56,44 +49,44 @@ const Countdown = () => {
     return [minutes, seconds];
   }
 
-  function startTimer() {
-    if (workingTime) {
-      workingTimer.start();
-    } else {
-      restTimer.start();
-    }
-  }
+  // function startTimer() {
+  //   if (workingTime) {
+  //     workingTimer.start();
+  //   } else {
+  //     restTimer.start();
+  //   }
+  // }
 
-  function pauseTimer() {
-    if (workingTime) {
-      workingTimer.pause();
-    } else {
-      restTimer.pause();
-    }
-  }
+  // function pauseTimer() {
+  //   if (workingTime) {
+  //     workingTimer.pause();
+  //   } else {
+  //     restTimer.pause();
+  //   }
+  // }
 
-  function addOneMin() {
-    if (workingTime) {
-      workingTimer.addOne();
-    } else {
-      restTimer.addOne();
-    }
-  }
+  // function addOneMin() {
+  //   if (workingTime) {
+  //     workingTimer.addOne();
+  //   } else {
+  //     restTimer.addOne();
+  //   }
+  // }
 
-  function stopTimer() {
-    if (workingTime) {
-      workingTimer.stop(workingIntervalDuration);
-    } else {
-      restTimer.stop(restIntervalDuration);
-    }
-    setWorkingTime(true);
-    setTransientDuration(workingIntervalDuration);
-  }
+  // function stopTimer() {
+  //   if (workingTime) {
+  //     workingTimer.stop(workingIntervalDuration);
+  //   } else {
+  //     restTimer.stop(restIntervalDuration);
+  //   }
+  //   setWorkingTime(true);
+  //   setTransientDuration(workingIntervalDuration);
+  // }
 
   return (
     <>
-      <p style={{ margin: "0", color: "tomato", textAlign: "center" }}>
-        {/* {workingTime ? "work" : "rest"} */}
+      <p style={{ margin: "0 0 20px", color: "tomato", textAlign: "center" }}>
+        {workingTime ? "work" : "rest"}
       </p>
 
       <Clock
@@ -102,30 +95,14 @@ const Countdown = () => {
         )}
       />
 
-      <div
-        style={{
-          width: "100%",
-          margin: "20px 0",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <Button onClick={startTimer}>
-          <FontAwesomeIcon icon={faPlay} />
-        </Button>
-
-        <Button onClick={pauseTimer}>
-          <FontAwesomeIcon icon={faPause} />
-        </Button>
-
-        <Button onClick={addOneMin}>
-          <FontAwesomeIcon icon={faPlus} />
-        </Button>
-
-        <Button onClick={stopTimer}>
-          <FontAwesomeIcon icon={faStop} />
-        </Button>
-      </div>
+      <TimerControlButtons
+        timer={workingTime ? workingTimer : restTimer}
+        workingIntervalDuration={workingIntervalDuration}
+        restIntervalDuration={restIntervalDuration}
+        workingTime={workingTime}
+        setWorkingTime={setWorkingTime}
+        setTransientDuration={setTransientDuration}
+      />
     </>
   );
 };
