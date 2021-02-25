@@ -3,6 +3,8 @@ import useCount from "../../hooks/useCount";
 import { Clock } from "../Clock";
 import TimerControlButtons from "../TimerControlButtons";
 
+import ring from "../../notifications/notification.mp3";
+
 const Countdown = () => {
   const workingIntervalDuration = 3 * 1000;
   const restIntervalDuration = 5 * 1000;
@@ -16,9 +18,19 @@ const Countdown = () => {
   const workingTimer = useCount(workingIntervalDuration);
   const restTimer = useCount(restIntervalDuration);
 
+  React.useEffect(() => {
+    Notification.requestPermission();
+  }, []);
+
+  function showNotification() {
+    new Audio(ring).play();
+  }
+
   useEffect(() => {
     if (workingTimer.done) {
       setTimeout(() => {
+        showNotification();
+
         setWorkingTime(false);
         setTransientDuration(restIntervalDuration);
         workingTimer.stop(workingIntervalDuration);
@@ -28,6 +40,8 @@ const Countdown = () => {
 
     if (restTimer.done) {
       setTimeout(() => {
+        showNotification();
+
         setWorkingTime(true);
         setTransientDuration(workingIntervalDuration);
         restTimer.stop(restIntervalDuration);
@@ -48,40 +62,6 @@ const Countdown = () => {
 
     return [minutes, seconds];
   }
-
-  // function startTimer() {
-  //   if (workingTime) {
-  //     workingTimer.start();
-  //   } else {
-  //     restTimer.start();
-  //   }
-  // }
-
-  // function pauseTimer() {
-  //   if (workingTime) {
-  //     workingTimer.pause();
-  //   } else {
-  //     restTimer.pause();
-  //   }
-  // }
-
-  // function addOneMin() {
-  //   if (workingTime) {
-  //     workingTimer.addOne();
-  //   } else {
-  //     restTimer.addOne();
-  //   }
-  // }
-
-  // function stopTimer() {
-  //   if (workingTime) {
-  //     workingTimer.stop(workingIntervalDuration);
-  //   } else {
-  //     restTimer.stop(restIntervalDuration);
-  //   }
-  //   setWorkingTime(true);
-  //   setTransientDuration(workingIntervalDuration);
-  // }
 
   return (
     <>
