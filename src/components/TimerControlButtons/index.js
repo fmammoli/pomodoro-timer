@@ -16,14 +16,7 @@ const ControlButtonsContainer = styled.div`
   justify-content: space-between;
 `;
 
-const TimerControlButtons = ({
-  timer,
-  workingIntervalDuration,
-  restIntervalDuration,
-  workingTime,
-  setWorkingTime,
-  setTransientDuration,
-}) => {
+const TimerControlButtons = ({ timer, duration }) => {
   function startTimer() {
     timer.start();
   }
@@ -37,9 +30,7 @@ const TimerControlButtons = ({
   }
 
   function stopTimer() {
-    timer.stop(workingTime ? workingIntervalDuration : restIntervalDuration);
-    setWorkingTime(true);
-    setTransientDuration(workingIntervalDuration);
+    timer.stop(duration);
   }
 
   return (

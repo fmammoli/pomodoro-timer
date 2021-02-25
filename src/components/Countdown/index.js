@@ -6,16 +6,19 @@ import TimerControlButtons from "../TimerControlButtons";
 import ring from "../../notifications/notification.mp3";
 
 const Countdown = () => {
-  const workingIntervalDuration = 3 * 1000;
+  const TIMERS = { work: "work", rest: "rest" };
+  const workIntervalDuration = 3 * 1000;
   const restIntervalDuration = 5 * 1000;
 
-  const [workingTime, setWorkingTime] = useState(true);
+  const [workTimerTotal, setWorkTimerTotal] = useState(0);
+  const [restTimerTotal, setRestTimerTotal] = useState(0);
 
-  const [transientDuration, setTransientDuration] = useState(
-    workingIntervalDuration
-  );
+  const [whichTimer, setWhichTimer] = useState(TIMERS.work);
 
-  const workingTimer = useCount(workingIntervalDuration);
+  //TODO - quando adiciona 1min o acumulador de tempo não percebe isso,
+  // ter que ter o total de tempo que passou quando da o done, so
+  // nao sei como...talvez mudar o hook.
+  const workTimer = useCount(workIntervalDuration);
   const restTimer = useCount(restIntervalDuration);
 
   React.useEffect(() => {
@@ -23,35 +26,47 @@ const Countdown = () => {
   }, []);
 
   function showNotification() {
-    new Audio(ring).play();
+    //new Audio(ring).play();
+  }
+
+  function setTimer(newTimerId) {
+    if (newTimerId === TIMERS.work) {
+      restTimer.stop(workIntervalDuration);
+      setWhichTimer(newTimerId);
+    }
+    if (newTimerId === TIMERS.rest) {
+      workTimer.stop(workIntervalDuration);
+      setWhichTimer(newTimerId);
+    }
   }
 
   useEffect(() => {
-    if (workingTimer.done) {
+    if (workTimer.done) {
       setTimeout(() => {
         showNotification();
-
-        setWorkingTime(false);
-        setTransientDuration(restIntervalDuration);
-        workingTimer.stop(workingIntervalDuration);
-        restTimer.start();
+        workTimer.stop(workIntervalDuration);
+        setWorkTimerTotal((prev) => (prev = prev + 1));
+        setWhichTimer(TIMERS.rest);
+        //Mostrar um popup pra dizer que terminou e perguntar
+        //se quer comecar um intervalo ou pular pro proximo trabalho
       }, 1000);
     }
 
     if (restTimer.done) {
       setTimeout(() => {
         showNotification();
-
-        setWorkingTime(true);
-        setTransientDuration(workingIntervalDuration);
         restTimer.stop(restIntervalDuration);
-        workingTimer.start();
+        setRestTimerTotal((prev) => (prev = prev + 1));
+        setWhichTimer(TIMERS.work);
+        //Mostrar um popup pra dizer que terminou e perguntar
+        //se quer comecar um work ou pular pro proximo intervalo
       }, 1000);
     }
-  }, [workingTimer.done, restTimer.done]);
+  }, [workTimer.done, restTimer.done]);
 
   function msToMinutesAndSeconds(elapsedTime) {
-    const ms = transientDuration - elapsedTime;
+    //const ms = transientDuration - elapsedTime;
+    const ms = elapsedTime;
     const minutes = Math.floor(ms / 60000);
     const seconds = ((ms % 60000) / 1000).toFixed(0);
     // to avoid bugs
@@ -63,26 +78,85 @@ const Countdown = () => {
     return [minutes, seconds];
   }
 
+  function minutesAndSecondsToString(time) {
+    if (time) return `${time[0]}m ${time[1]}s`;
+  }
+
   return (
     <>
       <p style={{ margin: "0 0 20px", color: "tomato", textAlign: "center" }}>
-        {workingTime ? "work" : "rest"}
+        {`Work Sessions: ${workTimerTotal}, ${minutesAndSecondsToString(
+          msToMinutesAndSeconds(workIntervalDuration * workTimerTotal)
+        )}`}
       </p>
+      <p style={{ margin: "0 0 20px", color: "tomato", textAlign: "center" }}>
+        {`Rest Sessions: ${restTimerTotal}, ${minutesAndSecondsToString(
+          msToMinutesAndSeconds(restIntervalDuration * restTimerTotal)
+        )}`}
+      </p>
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+        <button
+          onClick={() => setTimer(TIMERS.work)}
+          style={
+            whichTimer === TIMERS.work
+              ? {
+                  margin: "0 0 20px",
+                  color: "white",
+                  backgroundColor: "tomato",
+                }
+              : {
+                  margin: "0 0 20px",
+                  color: "Tomato",
+                }
+          }
+        >
+          Work
+        </button>
+        <button
+          onClick={() => setTimer(TIMERS.rest)}
+          style={
+            whichTimer === TIMERS.rest
+              ? {
+                  margin: "0 0 20px",
+                  color: "white",
+                  backgroundColor: "tomato",
+                }
+              : {
+                  margin: "0 0 20px",
+                  color: "Tomato",
+                }
+          }
+        >
+          Rest
+        </button>
+      </div>
 
-      <Clock
-        time={msToMinutesAndSeconds(
-          workingTime ? workingTimer.currentTime : restTimer.currentTime
-        )}
-      />
-
-      <TimerControlButtons
-        timer={workingTime ? workingTimer : restTimer}
-        workingIntervalDuration={workingIntervalDuration}
-        restIntervalDuration={restIntervalDuration}
-        workingTime={workingTime}
-        setWorkingTime={setWorkingTime}
-        setTransientDuration={setTransientDuration}
-      />
+      {whichTimer === TIMERS.work && (
+        <>
+          <Clock
+            time={msToMinutesAndSeconds(
+              workIntervalDuration - workTimer.currentTime
+            )}
+          />
+          <TimerControlButtons
+            timer={workTimer}
+            duration={workIntervalDuration}
+          ></TimerControlButtons>
+        </>
+      )}
+      {whichTimer === TIMERS.rest && (
+        <>
+          <Clock
+            time={msToMinutesAndSeconds(
+              restIntervalDuration - restTimer.currentTime
+            )}
+          />
+          <TimerControlButtons
+            timer={restTimer}
+            duration={restIntervalDuration}
+          ></TimerControlButtons>
+        </>
+      )}
     </>
   );
 };
