@@ -16,6 +16,7 @@ function useCount(duration) {
   const [pausedTime, setPausedTime] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [additionalMinutes, setAdditionalMinutes] = useState(0);
+  const [extraTimeUsed, setExtraTimeUsed] = useState(0);
 
   const [isActive, setActive] = useState(false);
 
@@ -51,6 +52,7 @@ function useCount(duration) {
   useEffect(() => {
     if (isActive) {
       if (currentTime >= countDuration) {
+        setExtraTimeUsed(extraTimeUsed + additionalMinutes);
         setAdditionalMinutes(0);
         setDone(true);
         setActive(false);
@@ -76,11 +78,11 @@ function useCount(duration) {
   }
 
   function addOne() {
+    setAdditionalMinutes(additionalMinutes + 1);
     if (isActive) {
       setStartTime(roundElapsedTime - currentTime + 60 * 1000);
     } else {
       setCurrentTime(currentTime - 60 * 1000);
-      setAdditionalMinutes(additionalMinutes + 1);
     }
   }
 
@@ -97,6 +99,7 @@ function useCount(duration) {
     currentTime: currentTime,
     isActive: isActive,
     done: done,
+    extraTimeUsed: extraTimeUsed,
     start: start,
     pause: pause,
     addOne: addOne,

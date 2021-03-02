@@ -18,6 +18,11 @@ const Countdown = () => {
   //TODO - quando adiciona 1min o acumulador de tempo não percebe isso,
   // ter que ter o total de tempo que passou quando da o done, so
   // nao sei como...talvez mudar o hook.
+  // ....................................................................
+  // ATUALIZAÇÃO - estou retornando um estado acumulativo do useCount
+  // chamado 'extraTimeUsed' e estou utilizando ele pra contar o tempo
+  // total de trabalho/descanso. Mas pode ser que não seja a melhor saída...
+
   const workTimer = useCount(workIntervalDuration);
   const restTimer = useCount(restIntervalDuration);
 
@@ -86,12 +91,18 @@ const Countdown = () => {
     <>
       <p style={{ margin: "0 0 20px", color: "tomato", textAlign: "center" }}>
         {`Work Sessions: ${workTimerTotal}, ${minutesAndSecondsToString(
-          msToMinutesAndSeconds(workIntervalDuration * workTimerTotal)
+          msToMinutesAndSeconds(
+            workIntervalDuration * workTimerTotal +
+              workTimer.extraTimeUsed * 60 * 1000
+          )
         )}`}
       </p>
       <p style={{ margin: "0 0 20px", color: "tomato", textAlign: "center" }}>
         {`Rest Sessions: ${restTimerTotal}, ${minutesAndSecondsToString(
-          msToMinutesAndSeconds(restIntervalDuration * restTimerTotal)
+          msToMinutesAndSeconds(
+            restIntervalDuration * restTimerTotal +
+              restTimer.extraTimeUsed * 60 * 1000
+          )
         )}`}
       </p>
       <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
